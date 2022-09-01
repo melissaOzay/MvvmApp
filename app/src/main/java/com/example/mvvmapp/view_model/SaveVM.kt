@@ -25,6 +25,7 @@ class SaveVM : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     createNewUserLiveData.postValue(response.body())
+//                    createNewUserLiveData.postValue(repository.getUser())
                 } else {
                     failure.postValue(response.errorBody().toString())
                 }

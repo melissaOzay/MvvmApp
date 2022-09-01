@@ -17,6 +17,7 @@ import com.example.mvvmapp.R
 import com.example.mvvmapp.adapter.AdapterUtils
 import com.example.mvvmapp.view_model.UserVM
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlin.math.log
 
 
 class UserActivity : AppCompatActivity() {
@@ -36,11 +37,14 @@ class UserActivity : AppCompatActivity() {
         initialiseAdapter()
         floatingButton()
         loadData()
-        activityViewModel.loadData()
         createData()
 
 
+    }
 
+    override fun onStart() {
+        super.onStart()
+        activityViewModel.loadData()
     }
 
     override fun onResume() {
