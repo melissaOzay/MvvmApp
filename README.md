@@ -8,6 +8,6 @@
 *Pictures related to the application are located below*
  
  
+ <a href="#"><img width="30%" height="auto" src="https://user-images.githubusercontent.com/106618067/186535639-01b84f18-e0c6-46ea-addd-e154c48aad88.jpg" height="175px"/></a>
  
- 
-![Screenshot_1](https://user-images.githubusercontent.com/106618067/186535639-01b84f18-e0c6-46ea-addd-e154c48aad88.jpg)
+
