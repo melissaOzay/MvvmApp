@@ -1,38 +1,37 @@
 package com.example.mvvmapp.view_model
 
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.mvvmapp.api.RestApi
+import androidx.lifecycle.*
 import com.example.mvvmapp.data_class.UserInfo
-import com.example.mvvmapp.service.ServiceBuilder
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.mvvmapp.repository.UserRepository
+import com.example.mvvmapp.repository.project_in_repository.CreateNewUserInterface
 
 class SaveVM : ViewModel() {
 
-    var createNewUserLiveData: MutableLiveData<List<UserInfo>> = MutableLiveData()
-    val failure = MutableLiveData<String>()
+    private var bagRepo = UserRepository()
+    var failure = MutableLiveData<String>()
+    val userListInfo = MutableLiveData<List<UserInfo>>()
 
+    fun createNewUser(data: UserInfo){
+        bagRepo.createNewUser(data,object:CreateNewUserInterface{
+            override fun onSuccess(data: List<UserInfo>) {
+                userListInfo.postValue(data)
+            }
 
-    fun createNewUser(userData: UserInfo) {
-        val retrofit = ServiceBuilder.buildService(RestApi::class.java)
-        retrofit.addUser(userData).enqueue(object : Callback<List<UserInfo>> {
-            override fun onResponse(
-                call: Call<List<UserInfo>>,
-                response: Response<List<UserInfo>>
-            ) {
-                if (response.isSuccessful) {
-                    createNewUserLiveData.postValue(response.body())
-//                    createNewUserLiveData.postValue(repository.getUser())
-                } else {
-                    failure.postValue(response.errorBody().toString())
-                }
+            override fun onFail(message: String) {
+                failure.postValue(message)
             }
-            override fun onFailure(call: Call<List<UserInfo>>, t: Throwable) {
-                failure.postValue(t.message)
-            }
-        })
+
+        }    )
     }
-}
+
+    }
+
+
+
+
+
+
+
+
+

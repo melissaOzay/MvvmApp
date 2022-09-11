@@ -5,18 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmapp.R
 import com.example.mvvmapp.data_class.UserInfo
-import com.example.mvvmapp.ui.UserActivity
+import com.example.mvvmapp.ui.UserFragment
 import java.util.*
+import kotlin.collections.ArrayList
 
-class AdapterUtils(var userList: List<UserInfo>, mainActivity: UserActivity) :
-    RecyclerView.Adapter<AdapterUtils.CompanyViewHolder>() {
+class AppAdapter :
+    RecyclerView.Adapter<AppAdapter.CompanyViewHolder>() {
+    private var userList = arrayListOf<UserInfo>()
 
-    fun setData(userList: List<UserInfo>) {
+    fun setData(userList: ArrayList<UserInfo>) {
         this.userList = userList
-        Collections.reverse(userList)
+        userList.reverse()
         notifyDataSetChanged()
     }
 

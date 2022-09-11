@@ -1,68 +1,45 @@
 package com.example.mvvmapp.view_model
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.mvvmapp.api.RestApi
 import com.example.mvvmapp.data_class.UserInfo
-import com.example.mvvmapp.service.ServiceBuilder
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.mvvmapp.repository.UserRepository
+import com.example.mvvmapp.repository.project_in_repository.SearchInterface
+import com.example.mvvmapp.repository.project_in_repository.UserListInterface
+
 
 
 class UserVM : ViewModel() {
-
-    var userList = MutableLiveData<List<UserInfo>>()
-    var searchData: MutableLiveData<List<UserInfo>> = MutableLiveData()
+    private var bagRepo = UserRepository()
+    val userListInfo = MutableLiveData<List<UserInfo>>()
+    val fail = MutableLiveData<String>()
+    val searchList = MutableLiveData<List<UserInfo>>()
     val failure = MutableLiveData<String>()
 
-
-
     fun loadData() {
-        val retrofit = ServiceBuilder.buildService(RestApi::class.java)
-        retrofit.getUser().enqueue(object : Callback<List<UserInfo>> {
-            override fun onResponse(
-                call: Call<List<UserInfo>>,
-                response: Response<List<UserInfo>>
-            ) {
-                if (response.isSuccessful) {
-                    userList.value = response.body()
-                }else{
-                    failure.postValue(response.errorBody().toString())
-                }
+        bagRepo.loadData(object : UserListInterface {
+            override fun success(userList: List<UserInfo>) {
+                userListInfo.postValue(userList)
             }
 
-            override fun onFailure(call: Call<List<UserInfo>>, t: Throwable) {
-                failure.postValue(t.message)
+            override fun fail(message: String) {
+                fail.postValue(message)
             }
+
         })
     }
 
-    fun searchAfter(searchAfter: String) {
-        if (searchAfter.length >= 3){
-            val retrofit = ServiceBuilder.buildService(RestApi::class.java)
-            retrofit.getMovies(searchAfter).enqueue(object : Callback<List<UserInfo>> {
+    fun searchAfter(searchAfter: String){
+     bagRepo.searchAfter(searchAfter,object :SearchInterface{
+         override fun onSuccess(data: List<UserInfo>) {
+             searchList.postValue(data)
+         }
 
-                override fun onResponse(
-                    call: Call<List<UserInfo>>,
-                    response: Response<List<UserInfo>>
-                ) {
-                    if (response.isSuccessful) {
-                        searchData.postValue(response.body())
+         override fun onFail(message: String) {
+             failure.postValue(message)
+         }
 
-                    } else {
-                        failure.postValue(response.errorBody().toString())
-
-                    }
-                }
-
-                override fun onFailure(call: Call<List<UserInfo>>, t: Throwable) {
-                    failure.postValue(t.message)
-
-                }
-            })
-        }
+     })
     }
 }
 
